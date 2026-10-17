@@ -1,7 +1,8 @@
+import pytest
 from sqlalchemy import select, update
 
 from app.adapters.species_id import get_species_identifier
-from app.cli import route_pending, set_role, simulate_reviews
+from app.cli import route_pending, set_password, set_role, simulate_reviews
 from app.main import app
 from app.models import Observation, Role, User
 from tests.helpers import FakeIdentifier, taxon_id, upload
@@ -13,6 +14,21 @@ def test_set_role(make_user, db):
     set_role(user.email, Role.VERIFIER)
     db.expire_all()
     assert db.get(User, user.id).role == "verifier"
+
+
+def test_set_password_lets_the_user_sign_in(client, make_user):
+    user, _ = make_user()
+    set_password(user.email.upper(), "a-new-password")
+    res = client.post(
+        "/api/v1/auth/login", json={"email": user.email, "password": "a-new-password"}
+    )
+    assert res.status_code == 200
+
+
+def test_set_password_rejects_short_passwords(make_user):
+    user, _ = make_user()
+    with pytest.raises(SystemExit):
+        set_password(user.email, "short")
 
 
 def test_simulated_experts_confirm_clean_records_and_reject_flagged_ones(

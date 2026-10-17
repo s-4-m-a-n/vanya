@@ -116,6 +116,19 @@ def set_role(email: str, role: Role) -> User:
         return user
 
 
+def set_password(email: str, password: str) -> User:
+    """Reset a forgotten password (there is no email-based reset yet)."""
+    if not 8 <= len(password) <= 128:
+        raise SystemExit("Password must be 8-128 characters")
+    with get_sessionmaker()() as db:
+        user = db.scalar(select(User).where(User.email == email.lower(), User.deleted_at.is_(None)))
+        if user is None:
+            raise SystemExit(f"No user {email}")
+        user.password_hash = hash_password(password)
+        db.commit()
+        return user
+
+
 def route_pending() -> int:
     """Re-run routing for records stuck in `submitted` (e.g. a handler failed)."""
     with get_sessionmaker()() as db:
@@ -359,6 +372,10 @@ def main(argv: list[str] | None = None) -> None:
     role.add_argument("--email", required=True)
     role.add_argument("--role", type=Role, choices=list(Role), required=True)
 
+    reset = sub.add_parser("set-password", help="Reset a user's password")
+    reset.add_argument("--email", required=True)
+    reset.add_argument("--password", help="Prompted for if omitted")
+
     sub.add_parser("route-pending", help="Re-run verification routing for stuck submissions")
 
     sim = sub.add_parser("simulate-reviews", help="Demo only: simulated experts review the queue")
@@ -422,6 +439,9 @@ def main(argv: list[str] | None = None) -> None:
     elif args.command == "set-role":
         updated = set_role(args.email, args.role)
         print(f"{updated.email} is now {updated.role}")
+    elif args.command == "set-password":
+        password = args.password or getpass.getpass("New password: ")
+        print(f"Password updated for {set_password(args.email, password).email}")
     elif args.command == "route-pending":
         print(f"Routed {route_pending()} submission(s)")
     elif args.command == "simulate-reviews":

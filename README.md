@@ -36,6 +36,7 @@ uv sync
 uv run alembic upgrade head
 uv run python -m app.cli seed-taxa
 uv run python -m app.cli create-user --email admin@example.org --name Admin --role admin
+# Forgot a password?  uv run python -m app.cli set-password --email admin@example.org
 uv run uvicorn app.main:app --reload                   # http://localhost:8000/docs
 ```
 
