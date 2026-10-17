@@ -49,11 +49,8 @@ def test_simulated_experts_confirm_clean_records_and_reject_flagged_ones(
 
     assert results == {clean["id"]: "verified", moved["id"]: "rejected"}
     db.expire_all()
-    experts = db.scalars(select(User).where(User.email.like("sim-expert-%"))).all()
-    assert {e.display_name for e in experts} == {
-        "Simulated expert 1 (demo)",
-        "Simulated expert 2 (demo)",
-    }
+    experts = db.scalars(select(User).where(User.email.like("expert_@example.org"))).all()
+    assert {e.display_name for e in experts} == {"Expert 1 (demo)", "Expert 2 (demo)"}
     assert db.get(Observation, moved["id"]).rejection_reason == "wrong_location_or_time"
 
 

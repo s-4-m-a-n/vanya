@@ -41,8 +41,8 @@ from app.services.verification import (
 
 # Simulated experts for demos (PRD §12: the expert queue may be simulated; label it).
 SIMULATED_EXPERTS = [
-    ("sim-expert-1@demo.digitalhunter.local", "Simulated expert 1 (demo)"),
-    ("sim-expert-2@demo.digitalhunter.local", "Simulated expert 2 (demo)"),
+    ("expert1@example.org", "Expert 1 (demo)"),
+    ("expert2@example.org", "Expert 2 (demo)"),
 ]
 # Integrity flags a simulated expert treats as grounds for rejection.
 SIM_REJECT = {
