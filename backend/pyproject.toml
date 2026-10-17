@@ -1,0 +1,54 @@
+[project]
+name = "digitalhunter-api"
+version = "0.1.0"
+description = "Citizen-Science Biodiversity Monitor — API and workers"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sqlalchemy>=2.0.36",
+    "psycopg[binary]>=3.2",
+    "geoalchemy2>=0.16",
+    "alembic>=1.14",
+    "pydantic-settings>=2.6",
+    "email-validator>=2.2",
+    "pyjwt>=2.10",
+    "argon2-cffi>=23.1",
+    "python-multipart>=0.0.17",
+    "pillow>=11",
+    "pillow-heif>=0.20",
+    "httpx>=0.28",
+]
+
+[project.optional-dependencies]
+# Only needed once the matching *_PROVIDER is switched to a Google Cloud service.
+gcp = [
+    "google-cloud-storage>=2.18",
+    "google-cloud-pubsub>=2.27",
+    "google-cloud-bigquery>=3.27",
+    "google-genai>=1.40",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"migrations/versions/*" = ["E501"]

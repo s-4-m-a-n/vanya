@@ -1,0 +1,44 @@
+# Local stand-ins for the Google Cloud stack. See docs/ARCHITECTURE.md.
+#   docker compose up -d db            # database only; run the API with uv for hot reload
+#   docker compose --profile app up    # database + API container (same image as Cloud Run)
+services:
+  db:
+    # Cloud SQL for PostgreSQL 16 with the postgis extension on GCP.
+    image: postgis/postgis:16-3.5-alpine
+    environment:
+      POSTGRES_USER: digitalhunter
+      POSTGRES_PASSWORD: digitalhunter
+      POSTGRES_DB: digitalhunter
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./docker/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U digitalhunter -d digitalhunter"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    mem_limit: 512m
+
+  api:
+    profiles: ["app"]
+    build: ./backend
+    # Locally, apply migrations on start; on GCP this is a separate Cloud Run Job.
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8080"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://digitalhunter:digitalhunter@db:5432/digitalhunter
+      STORAGE_LOCAL_DIR: /data/media
+      PORT: "8080"
+    ports:
+      - "8000:8080"
+    volumes:
+      - media-data:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  media-data:

@@ -1,0 +1,24 @@
+# Secrets: only the example file is committed
+.env
+backend/.env
+!.env.example
+
+# Dependencies and build output
+node_modules/
+web/dist/
+web/dev-dist/
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local data (uploaded photos)
+backend/var/
+var/
+
+# Editor and tool settings
+.vscode/
+.idea/
+.DS_Store

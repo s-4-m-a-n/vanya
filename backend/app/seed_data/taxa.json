@@ -1,0 +1,592 @@
+{
+  "_note": "Development sample. Scientific names are real. IUCN categories were checked against the IUCN Red List via GBIF on 2026-10-17 (`python -m app.cli check-seed-statuses`); re-check and confirm licensing before launch (PRD section 13, question 2). `sensitivity` overrides location protection where status alone is not enough (green turtle: nesting beaches are poaching targets).",
+  "taxa": [
+    {
+      "scientific_name": "Passer domesticus",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Passeridae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "House Sparrow",
+        "hi": "गौरैया",
+        "es": "Gorrión común"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Corvus splendens",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Corvidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "House Crow"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Columba livia",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Columbidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Rock Dove",
+        "es": "Paloma bravía"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Sturnus vulgaris",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Sturnidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Common Starling"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Acridotheres tristis",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Sturnidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Common Myna"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Pavo cristatus",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Phasianidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Indian Peafowl",
+        "hi": "मोर"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Ardeotis nigriceps",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Otididae",
+      "iucn_status": "CR",
+      "common_names": {
+        "en": "Great Indian Bustard"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Haliaeetus leucocephalus",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Accipitridae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Bald Eagle"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Aquila chrysaetos",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Accipitridae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Golden Eagle"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Falco peregrinus",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Falconidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Peregrine Falcon",
+        "es": "Halcón peregrino"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Gyps bengalensis",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Accipitridae",
+      "iucn_status": "CR",
+      "common_names": {
+        "en": "White-rumped Vulture"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Buceros bicornis",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Bucerotidae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Great Hornbill"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Antigone antigone",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Gruidae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Sarus Crane",
+        "hi": "सारस"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Erithacus rubecula",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Muscicapidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "European Robin"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Turdus migratorius",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Turdidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "American Robin"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Cardinalis cardinalis",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Cardinalidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Northern Cardinal"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Alcedo atthis",
+      "taxon_group": "bird",
+      "kingdom": "Animalia",
+      "class_name": "Aves",
+      "family": "Alcedinidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Common Kingfisher"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Panthera tigris",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Felidae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Tiger",
+        "hi": "बाघ",
+        "es": "Tigre"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Elephas maximus",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Elephantidae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Asian Elephant",
+        "hi": "हाथी"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Loxodonta africana",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Elephantidae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "African Savanna Elephant"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Ailurus fulgens",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Ailuridae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Red Panda"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Vulpes vulpes",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Canidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Red Fox",
+        "es": "Zorro rojo"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Sciurus vulgaris",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Sciuridae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Eurasian Red Squirrel"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Sciurus carolinensis",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Sciuridae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Eastern Gray Squirrel"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Procyon lotor",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Procyonidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Raccoon"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Odocoileus virginianus",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Cervidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "White-tailed Deer"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Manis crassicaudata",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Manidae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Indian Pangolin"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Rhinoceros unicornis",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Rhinocerotidae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Greater One-horned Rhinoceros"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Macaca mulatta",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Mammalia",
+      "family": "Cercopithecidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Rhesus Macaque"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Rhinella marina",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Amphibia",
+      "family": "Bufonidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Cane Toad"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Lithobates catesbeianus",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Amphibia",
+      "family": "Ranidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "American Bullfrog"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Chelonia mydas",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Reptilia",
+      "family": "Cheloniidae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Green Turtle"
+      },
+      "sensitivity": "obscured"
+    },
+    {
+      "scientific_name": "Python bivittatus",
+      "taxon_group": "animal",
+      "kingdom": "Animalia",
+      "class_name": "Reptilia",
+      "family": "Pythonidae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Burmese Python"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Lantana camara",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Verbenaceae",
+      "iucn_status": "NE",
+      "common_names": {
+        "en": "Lantana"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Pontederia crassipes",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Liliopsida",
+      "family": "Pontederiaceae",
+      "iucn_status": "NE",
+      "common_names": {
+        "en": "Water Hyacinth"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Prosopis juliflora",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Fabaceae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Mesquite"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Parthenium hysterophorus",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Asteraceae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Parthenium Weed"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Reynoutria japonica",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Polygonaceae",
+      "iucn_status": "NE",
+      "common_names": {
+        "en": "Japanese Knotweed"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Quercus robur",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Fagaceae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "English Oak"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Acer saccharum",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Sapindaceae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Sugar Maple"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Santalum album",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Santalaceae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Indian Sandalwood"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Dalbergia latifolia",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Fabaceae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Indian Rosewood"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Dionaea muscipula",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Droseraceae",
+      "iucn_status": "VU",
+      "common_names": {
+        "en": "Venus Flytrap"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Sequoiadendron giganteum",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Pinopsida",
+      "family": "Cupressaceae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Giant Sequoia"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Ginkgo biloba",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Ginkgoopsida",
+      "family": "Ginkgoaceae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Ginkgo"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Araucaria araucana",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Pinopsida",
+      "family": "Araucariaceae",
+      "iucn_status": "EN",
+      "common_names": {
+        "en": "Monkey Puzzle Tree"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Ficus benghalensis",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Moraceae",
+      "iucn_status": "LC",
+      "common_names": {
+        "en": "Banyan",
+        "hi": "बरगद"
+      },
+      "sensitivity": null
+    },
+    {
+      "scientific_name": "Taraxacum officinale",
+      "taxon_group": "plant",
+      "kingdom": "Plantae",
+      "class_name": "Magnoliopsida",
+      "family": "Asteraceae",
+      "iucn_status": "NE",
+      "common_names": {
+        "en": "Common Dandelion"
+      },
+      "sensitivity": null
+    }
+  ]
+}
