@@ -35,8 +35,8 @@ export default defineConfig({
         // The app shell works offline; API and photo requests always go to the network
         // (captures are queued in IndexedDB instead).
         navigateFallback: "/index.html",
-        // The desktop dashboard (and Leaflet) loads on demand; don't push it to phones.
-        globIgnores: ["**/DashboardApp-*"],
+        // The desktop dashboard (with Leaflet) and admin console load on demand; don't push them to phones.
+        globIgnores: ["**/DashboardApp-*", "**/AdminApp-*"],
         // App code plus the Latin font files, so the app looks the same offline.
         globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
         navigateFallbackDenylist: [/^\/api\//, /^\/media\//],

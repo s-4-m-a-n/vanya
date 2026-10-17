@@ -4,7 +4,11 @@ import { useState, type FormEvent } from "react";
 import { api, ApiError, saveSession, type Session } from "../api";
 import { useT } from "../i18n";
 
-export function AuthScreen({ onAuthed }: { onAuthed: (session: Session) => void }) {
+export function AuthScreen({ onAuthed, compact = false }: {
+  onAuthed: (session: Session) => void;
+  /** Form only: the console sign-in page shows its own branding. */
+  compact?: boolean;
+}) {
   const t = useT();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -37,6 +41,8 @@ export function AuthScreen({ onAuthed }: { onAuthed: (session: Session) => void 
 
   return (
     <main className="screen auth">
+      {!compact && (
+        <>
       <div className="brand">
         <img src="/icon.svg" alt="" width={76} height={76} />
         <h1>{t("appName")}</h1>
@@ -47,6 +53,8 @@ export function AuthScreen({ onAuthed }: { onAuthed: (session: Session) => void 
         <li><span className="icon-circle info"><Sparkles size={20} aria-hidden /></span>{t("valueIdentify")}</li>
         <li><span className="icon-circle accent"><ShieldCheck size={20} aria-hidden /></span>{t("valueProtect")}</li>
       </ul>
+        </>
+      )}
       <form className="card stack" onSubmit={submit}>
         {mode === "register" && (
           <label>

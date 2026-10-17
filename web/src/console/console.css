@@ -1,0 +1,116 @@
+/* Desktop console layout (organisation dashboard and admin console). Builds on the
+   .dash tokens from dashboard.css and the app tokens from styles.css. */
+#root:has(.console), #root:has(.console-signin) { max-width: none; }
+
+.console { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100dvh; background: var(--page); }
+.console-side {
+  position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; gap: 1rem;
+  padding: 1.1rem 0.85rem; background: #0f3d29; color: #e6f2ea; overflow-y: auto;
+}
+.console-brand { display: flex; align-items: center; gap: 0.65rem; color: inherit; text-decoration: none; padding: 0 0.35rem; }
+.console-brand img { width: 36px; height: 36px; border-radius: 10px; }
+.console-brand strong { display: block; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.console-brand small { display: block; font-size: 0.76rem; opacity: 0.72; }
+.console-side select {
+  margin: 0; width: 100%; background: rgba(255, 255, 255, 0.08); color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16); min-height: 40px; padding: 0.45rem 0.6rem;
+}
+.console-side select option { color: #17201b; }
+.console-org-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; padding: 0 0.35rem 0.3rem; font-weight: 700; }
+.console-nav { display: grid; gap: 0.15rem; }
+.console-nav button {
+  justify-content: flex-start; gap: 0.7rem; width: 100%; min-height: 42px; padding: 0.5rem 0.7rem;
+  border: none; border-radius: 10px; background: transparent; color: rgba(230, 242, 234, 0.82); font-weight: 600; font-size: 0.92rem; text-align: left;
+}
+.console-nav button:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+.console-nav button.active { background: rgba(255, 255, 255, 0.14); color: #fff; box-shadow: inset 3px 0 0 #f5b44a; }
+.console-badge { min-width: 22px; height: 20px; padding: 0 6px; border-radius: 999px; background: #f5b44a; color: #2b1a00; font-size: 0.72rem; font-weight: 800; display: grid; place-items: center; }
+.console-foot { margin-top: auto; display: grid; gap: 0.6rem; padding-top: 0.8rem; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+.console-foot a { display: flex; align-items: center; gap: 0.5rem; color: rgba(230, 242, 234, 0.85); font-size: 0.85rem; font-weight: 600; text-decoration: none; padding: 0.2rem 0.35rem; }
+.console-foot a:hover { color: #fff; }
+.console-user { display: flex; align-items: center; gap: 0.55rem; padding: 0.35rem; }
+.console-user strong { display: block; font-size: 0.86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.console-user small { display: block; font-size: 0.72rem; opacity: 0.65; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.console-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f5b44a; color: #2b1a00; display: grid; place-items: center; font-weight: 800; flex: none; }
+.icon-button { min-height: 34px; width: 34px; padding: 0; border-radius: 9px; background: transparent; border-color: rgba(255, 255, 255, 0.2); color: inherit; }
+
+.console-main { min-width: 0; display: flex; flex-direction: column; }
+.console-head {
+  position: sticky; top: 0; z-index: 1001; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 1rem 1.75rem; background: color-mix(in srgb, var(--page) 90%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--hairline);
+}
+.console-head h1 { font-size: 1.35rem; font-weight: 800; }
+.console-head .dash-note { font-size: 0.85rem; margin-top: 0.1rem; }
+.console-head select { width: auto; margin: 0; }
+.console .dash-main { padding: 1.25rem 1.75rem 2.5rem; }
+.console .dash-filters { padding: 0; }
+.console-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.console-filters select { width: auto; margin: 0; min-height: 40px; padding: 0.4rem 0.7rem; }
+.console-filters .chip { display: inline-flex; gap: 0.35rem; align-items: center; }
+
+.console-message { display: flex; gap: 1rem; align-items: center; max-width: 560px; margin: 4rem auto; padding: 1.5rem; background: var(--surface-1); border: 1px solid var(--ring); border-radius: 16px; }
+
+/* Data tables in the admin console */
+.console-table-wrap { overflow-x: auto; }
+table.console-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.console-table th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); font-weight: 700; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+.console-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--hairline); vertical-align: middle; }
+.console-table tr:last-child td { border-bottom: none; }
+.console-table tr:hover td { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+.console-table td.num, .console-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.console-table select { width: auto; margin: 0; min-height: 34px; padding: 0.25rem 0.5rem; font-size: 0.85rem; }
+.console-table .sub { display: block; color: var(--ink-muted); font-size: 0.78rem; }
+.console-toolbar { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.9rem; }
+.console-toolbar input[type="search"], .console-toolbar input[type="text"], .console-toolbar input[type="email"] { width: auto; flex: 1 1 220px; margin: 0; }
+.console-toolbar select { width: auto; margin: 0; }
+.console-pager { display: flex; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-top: 0.75rem; }
+.console-pager button { min-height: 36px; }
+.role-chip { text-transform: capitalize; }
+
+/* Sign-in */
+.console-signin { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(380px, 1fr); min-height: 100dvh; }
+.console-hero {
+  display: flex; flex-direction: column; padding: 2.5rem 3rem; color: #fff;
+  background: radial-gradient(120% 80% at 90% 0%, #1f7a51 0%, #155c3c 45%, #0d3f29 100%);
+}
+.console-hero-body { margin: auto 0; max-width: 520px; }
+.console-hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.console-hero-body > p { margin-top: 0.9rem; font-size: 1.1rem; opacity: 0.85; }
+.console-hero ul { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 0.9rem; }
+.console-hero li { display: flex; gap: 0.8rem; align-items: center; font-weight: 600; }
+.console-hero-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, 0.12); color: #f5b44a; flex: none; }
+.console-hero-foot { opacity: 0.6; font-size: 0.85rem; }
+.console-form { display: flex; flex-direction: column; padding: 1.5rem 2.5rem; background: var(--surface-1); }
+.console-form-top { display: flex; justify-content: flex-end; }
+.console-form-top select { width: auto; margin: 0; }
+.console-form-body { margin: auto; width: 100%; max-width: 400px; display: grid; gap: 0.5rem; }
+.console-form-body h2 { font-size: 1.6rem; font-weight: 800; }
+.console-form-body .auth { padding: 0; }
+.console-form-body .auth .card { box-shadow: none; border: none; padding: 0; background: transparent; }
+
+@media (max-width: 900px) {
+  .console { grid-template-columns: 1fr; }
+  .console-side { position: static; height: auto; gap: 0.75rem; }
+  .console-nav { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .console-nav button { width: auto; flex: none; }
+  .console-nav button.active { box-shadow: inset 0 -3px 0 #f5b44a; }
+  .console-foot { margin-top: 0; grid-template-columns: 1fr auto; align-items: center; }
+  .console-foot a { display: none; }
+  .console-head { position: static; padding: 1rem; }
+  .console .dash-main { padding: 1rem 1rem 2rem; }
+  .console-signin { grid-template-columns: 1fr; }
+  .console-hero { padding: 1.5rem; }
+  .console-hero-body { margin: 1.5rem 0; }
+  .console-hero h1 { font-size: 1.9rem; }
+  .console-form { padding: 1.5rem; }
+}
+
+/* Horizontal bar list (admin overview) */
+.bar-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
+.bar-list li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.88rem; }
+.bar-list .grow { flex: 0 0 9rem; }
+.bar-track { flex: 1; height: 8px; border-radius: 4px; background: var(--hairline); overflow: hidden; }
+.bar-track span { display: block; height: 100%; border-radius: 4px; background: var(--accent); }
+.bar-list strong { min-width: 2.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+.dash-tile .dash-note { margin-top: 0.15rem; }
