@@ -2,21 +2,21 @@ import "./dashboard.css";
 
 import type { FeatureCollection, Point, Polygon } from "geojson";
 import {
-  Bell, Building2, FileText, Leaf, LayoutDashboard, Map as MapIcon, Settings, Sparkles, X,
+  Bell, Building2, FileText, Leaf, LayoutDashboard, Map as MapIcon, Settings, Sparkles,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { ApiError, loadSession, saveSession, type Session } from "../api";
 import { ConsoleMessage, ConsoleShell, ConsoleSignIn, type NavItem } from "../console/ConsoleShell";
 import { isLocale, LocaleContext, translate, type Locale, type MessageKey } from "../i18n";
-import type { TaxonGroup } from "../types";
 import { dashboardApi, GROUPS } from "./api";
+import { ActiveFilters, FilterBar } from "./FilterPanel";
 import { AlertsPanel, AnalystPanel, ReportsPanel } from "./Insights";
 import { Manage } from "./Manage";
 import { MapPanel } from "./MapPanel";
-import { ChangesPanel, KpiTiles, NewRecords, RecordList, taxonName, TopSpecies } from "./Panels";
+import { ChangesPanel, KpiTiles, NewRecords, RecordList, TopSpecies } from "./Panels";
 import { TrendChart } from "./TrendChart";
-import type { Changes, Filters, NewRecord, Org, RecordItem, Region, Summary, TrendPoint } from "./types";
+import { EMPTY_FILTERS, type Changes, type Filters, type NewRecord, type Org, type RecordItem, type Region, type Summary, type TrendPoint } from "./types";
 
 interface Data {
   summary: Summary;
@@ -31,13 +31,6 @@ interface Data {
 
 type Page = "overview" | "species" | "alerts" | "analyst" | "reports" | "settings";
 const PAGES: Page[] = ["overview", "species", "alerts", "analyst", "reports", "settings"];
-
-const PERIODS: [number | null, MessageKey][] = [
-  [30, "dashLast30"],
-  [90, "dashLast90"],
-  [365, "dashLast365"],
-  [null, "dashAllTime"],
-];
 
 function pageFromHash(): Page {
   const hash = window.location.hash.slice(1) as Page;
@@ -55,7 +48,7 @@ export default function DashboardApp() {
   const [orgs, setOrgs] = useState<Org[] | null>(null);
   const [orgId, setOrgId] = useState<string | null>(() => new URLSearchParams(window.location.search).get("org"));
   const [regions, setRegions] = useState<Region[]>([]);
-  const [filters, setFilters] = useState<Filters>({ regionId: null, group: null, taxon: null, days: 90 });
+  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(false);
   const [mapMode, setMapMode] = useState<"points" | "grid">("points");
@@ -179,27 +172,23 @@ export default function DashboardApp() {
     analyst: "analystTitle", reports: "reportsTitle", settings: "settingsTitle",
   };
 
-  const filterBar = (
-    <div className="console-filters">
-      <select value={filters.days ?? ""} onChange={(e) => setFilters({ ...filters, days: e.target.value ? Number(e.target.value) : null })} aria-label={t("dashLast90")}>
-        {PERIODS.map(([days, key]) => <option key={key} value={days ?? ""}>{t(key)}</option>)}
-      </select>
-      <select value={filters.regionId ?? ""} onChange={(e) => setFilters({ ...filters, regionId: e.target.value ? Number(e.target.value) : null })} aria-label={t("dashRegions")}>
-        <option value="">{t("dashAllRegions")}</option>
-        {regions.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-      </select>
-      <select value={filters.group ?? ""} onChange={(e) => setFilters({ ...filters, group: (e.target.value || null) as TaxonGroup | null })} aria-label={t("dashAllGroups")}>
-        <option value="">{t("dashAllGroups")}</option>
-        {GROUPS.map((g) => <option key={g} value={g}>{t(`group_${g}_one`)}</option>)}
-      </select>
-      {filters.taxon && (
-        <span className="chip">
-          {taxonName(filters.taxon)}
-          <button className="link small" aria-label={t("dashClearSpecies")} onClick={() => setFilters({ ...filters, taxon: null })}><X size={14} aria-hidden /></button>
-        </span>
-      )}
-    </div>
-  );
+  async function exportCsv() {
+    if (!orgId) return;
+    try {
+      const blob = await dashboardApi.exportCsv(orgId, filters);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `vanya-${(org?.name ?? "records").replace(/\W+/g, "-").toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError(t("err_generic"));
+    }
+  }
+
+  const filterBar = <FilterBar filters={filters} onChange={setFilters} regions={regions} onExport={exportCsv} />;
+  const activeFilters = <ActiveFilters filters={filters} onChange={setFilters} />;
 
   let body;
   if (orgs && orgs.length === 0) {
@@ -233,6 +222,7 @@ export default function DashboardApp() {
   } else if (page === "species") {
     body = (
       <main className={`dash-main ${loading ? "refetching" : ""}`}>
+        {activeFilters}
         <div className="dash-row even">
           <section className="dash-card">
             <h2>{t("dashRarePanel")}</h2>
@@ -262,6 +252,7 @@ export default function DashboardApp() {
   } else {
     body = (
       <main className={`dash-main ${loading ? "refetching" : ""}`}>
+        {activeFilters}
         <KpiTiles summary={data.summary} />
         <div className="dash-row">
           <section className="dash-card">

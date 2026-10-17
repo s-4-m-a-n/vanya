@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from app.adapters.storage import BlobStorage
 from app.models import (
+    Geoprivacy,
     Observation,
     ObservationStatus,
     RegionOfInterest,
@@ -38,6 +39,13 @@ class Scope:
     end: datetime | None = None
     group: str | None = None
     taxon_id: int | None = None
+    # Finer filters for analysis; empty means "any".
+    habitats: tuple[str, ...] = ()
+    iucn: tuple[str, ...] = ()
+    rarity: tuple[str, ...] = ()
+    verification: str | None = None  # "auto" or "expert"
+    watchlist: str | None = None  # "invasive" or "priority"
+    protected: bool | None = None  # True: obscured/hidden records only; False: open only
 
 
 class DashboardService:
@@ -70,6 +78,21 @@ class DashboardService:
             conditions.append(Taxon.taxon_group == scope.group)
         if scope.taxon_id is not None:
             conditions.append(Observation.taxon_id == scope.taxon_id)
+        if scope.habitats:
+            conditions.append(Observation.habitat.in_(scope.habitats))
+        if scope.iucn:
+            conditions.append(Taxon.iucn_status.in_(scope.iucn))
+        if scope.rarity:
+            conditions.append(Observation.rarity_tier.in_(scope.rarity))
+        if scope.verification:
+            conditions.append(Observation.verification_method == scope.verification)
+        if scope.watchlist:
+            conditions.append(
+                Observation.taxon_id.in_(self._watched(scope, WatchCategory(scope.watchlist)))
+            )
+        if scope.protected is not None:
+            open_ = Observation.geoprivacy == Geoprivacy.OPEN.value
+            conditions.append(~open_ if scope.protected else open_)
         return conditions
 
     def _watched(self, scope: Scope, category: WatchCategory):  # noqa: ANN202
@@ -277,6 +300,33 @@ class DashboardService:
         return [
             {"taxon": self._taxon(t), "first_seen": seen.isoformat(), "records": n}
             for t, seen, n in rows
+        ]
+
+    def export_rows(self, scope: Scope, limit: int = 50_000) -> list[dict[str, Any]]:
+        """Filtered verified records for download, with generalised coordinates only."""
+        rows = self.db.execute(
+            self._from(Observation, Taxon)
+            .where(*self._conditions(scope))
+            .order_by(Observation.observed_at.desc())
+            .limit(limit)
+        ).all()
+        return [
+            {
+                "record_id": str(obs.id),
+                "observed_at": obs.observed_at.isoformat(),
+                "scientific_name": taxon.scientific_name,
+                "common_name": taxon.common_name(self.locale) or "",
+                "group": taxon.taxon_group,
+                "iucn_status": taxon.iucn_status,
+                "habitat": obs.habitat or "",
+                "rarity_tier": obs.rarity_tier or "",
+                "verification": obs.verification_method or "",
+                "location_protection": obs.geoprivacy or "",
+                "latitude": obs.generalised_latitude,
+                "longitude": obs.generalised_longitude,
+                "location_precision_m": obs.generalised_accuracy_m,
+            }
+            for obs, taxon in rows
         ]
 
     # --- Helpers -------------------------------------------------------------------------

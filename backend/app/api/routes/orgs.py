@@ -1,15 +1,28 @@
 """Organisation workspaces and the dashboard (PRD F4). Members only; others get 404."""
 
+import csv
+import io
 import uuid
 from datetime import UTC, date, datetime, time, timedelta
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from pydantic import BaseModel, Field
 
 from app.adapters.storage import BlobStorage, get_storage
 from app.api.deps import CurrentUser, DbSession, require_roles, service_error
-from app.models import MemberRole, OrganisationKind, Role, TaxonGroup, User, WatchCategory
+from app.models import (
+    Habitat,
+    IucnStatus,
+    MemberRole,
+    OrganisationKind,
+    Role,
+    TaxonGroup,
+    User,
+    VerificationMethod,
+    WatchCategory,
+)
+from app.models.rewards import RarityTier
 from app.schemas.taxa import TaxonOut
 from app.services.dashboard import GRID_STEPS, DashboardService, Scope
 from app.services.geometry import InvalidGeometry
@@ -199,6 +212,14 @@ def dashboard_scope(
     end: Annotated[date | None, Query(description="Inclusive")] = None,
     group: TaxonGroup | None = None,
     taxon_id: int | None = None,
+    habitat: Annotated[list[Habitat] | None, Query(description="Any of these habitats")] = None,
+    iucn: Annotated[list[IucnStatus] | None, Query(description="Any of these statuses")] = None,
+    rarity: Annotated[list[RarityTier] | None, Query(description="Any of these tiers")] = None,
+    verification: VerificationMethod | None = None,
+    watchlist: WatchCategory | None = None,
+    protected: Annotated[
+        bool | None, Query(description="true: protected locations only; false: open only")
+    ] = None,
 ) -> Scope:
     org = _call(orgs.get_for, org_id, user)
     if region_id is not None and region_id not in {r.id for r in org.regions}:
@@ -210,6 +231,12 @@ def dashboard_scope(
         end=datetime.combine(end + timedelta(days=1), time.min, UTC) if end else None,
         group=group.value if group else None,
         taxon_id=taxon_id,
+        habitats=tuple(h.value for h in habitat or ()),
+        iucn=tuple(s.value for s in iucn or ()),
+        rarity=tuple(r.value for r in rarity or ()),
+        verification=verification.value if verification else None,
+        watchlist=watchlist.value if watchlist else None,
+        protected=protected,
     )
 
 
@@ -260,6 +287,39 @@ def rare(scope: ScopeDep, board: Dashboard) -> list[dict[str, Any]]:
 @router.get("/{org_id}/dashboard/invasive")
 def invasive(scope: ScopeDep, board: Dashboard) -> list[dict[str, Any]]:
     return board.invasive(scope)
+
+
+@router.get("/{org_id}/dashboard/export.csv")
+def export_csv(scope: ScopeDep, board: Dashboard) -> Response:
+    """The filtered verified records as CSV (generalised coordinates only)."""
+    rows = board.export_rows(scope)
+    out = io.StringIO()
+    writer = csv.DictWriter(out, fieldnames=EXPORT_FIELDS)
+    writer.writeheader()
+    writer.writerows(rows)
+    filename = f"vanya-records-{date.today().isoformat()}.csv"
+    return Response(
+        out.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+EXPORT_FIELDS = [
+    "record_id",
+    "observed_at",
+    "scientific_name",
+    "common_name",
+    "group",
+    "iucn_status",
+    "habitat",
+    "rarity_tier",
+    "verification",
+    "location_protection",
+    "latitude",
+    "longitude",
+    "location_precision_m",
+]
 
 
 @router.get("/{org_id}/dashboard/new-records")

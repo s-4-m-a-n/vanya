@@ -169,3 +169,55 @@ def test_analyst_reveal_is_limited_to_their_regions(db, client, setup):
 
     assert reveal(london_tiger["id"]) == 200
     assert reveal(paris_tiger.id) == 403
+
+
+def test_habitat_iucn_rarity_and_verification_filters(db, client, setup):
+    make_verified(db, setup["observer"], setup["sparrow"], *LONDON, NOW, habitat="wetland")
+    make_verified(
+        db,
+        setup["observer"],
+        setup["sparrow"],
+        *LONDON,
+        NOW,
+        habitat="forest",
+        verification_method="expert",
+    )
+    count = lambda **p: get(client, setup, "summary", **p)["observations"]  # noqa: E731
+    assert count(habitat=["wetland"]) == 1
+    assert count(habitat=["wetland", "forest"]) == 2
+    assert count(iucn=["EN"]) == 1  # the tiger
+    assert count(rarity=["rare"]) == 1  # the dove
+    assert count(verification="expert") == 1
+    assert count(verification="auto") == 11
+
+
+def test_watchlist_and_protection_filters(client, setup):
+    invasive = get(client, setup, "summary", watchlist="invasive")
+    assert invasive["observations"] == 1
+    assert invasive["top_species"][0]["taxon"]["scientific_name"] == "Rhinella marina"
+    protected = get(client, setup, "observations", protected=True)["features"]
+    assert {f["properties"]["taxon"]["scientific_name"] for f in protected} == {"Panthera tigris"}
+    assert get(client, setup, "summary", protected=False)["observations"] == 9
+
+
+def test_invalid_filter_values_are_rejected(client, setup):
+    res = client.get(
+        f"/api/v1/orgs/{setup['org'].id}/dashboard/summary",
+        params={"habitat": "moon"},
+        headers=setup["headers"],
+    )
+    assert res.status_code == 422
+
+
+def test_csv_export_follows_filters(client, setup):
+    res = client.get(
+        f"/api/v1/orgs/{setup['org'].id}/dashboard/export.csv",
+        params={"group": "bird"},
+        headers=setup["headers"],
+    )
+    assert res.status_code == 200
+    assert res.headers["content-type"].startswith("text/csv")
+    lines = res.text.strip().splitlines()
+    assert lines[0].startswith("record_id,observed_at,scientific_name")
+    assert len(lines) == 1 + 8  # 6 sparrows + 2 doves in the region; Paris excluded
+    assert all(",bird," in line for line in lines[1:])

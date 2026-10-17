@@ -1,6 +1,6 @@
 import type { FeatureCollection, Point, Polygon } from "geojson";
 
-import { json, request } from "../api";
+import { json, loadSession, request } from "../api";
 import type { TaxonGroup } from "../types";
 import type {
   AlertItem,
@@ -24,7 +24,16 @@ function scope(filters: Filters): string {
   if (filters.regionId != null) query.set("region_id", String(filters.regionId));
   if (filters.group) query.set("group", filters.group);
   if (filters.taxon) query.set("taxon_id", String(filters.taxon.id));
-  if (filters.days != null) {
+  filters.habitats.forEach((h) => query.append("habitat", h));
+  filters.iucn.forEach((s) => query.append("iucn", s));
+  filters.rarity.forEach((r) => query.append("rarity", r));
+  if (filters.verification) query.set("verification", filters.verification);
+  if (filters.watchlist) query.set("watchlist", filters.watchlist);
+  if (filters.protected != null) query.set("protected", String(filters.protected));
+  if (filters.from || filters.to) {
+    if (filters.from) query.set("start", filters.from);
+    if (filters.to) query.set("end", filters.to);
+  } else if (filters.days != null) {
     const start = new Date(Date.now() - filters.days * 86_400_000);
     query.set("start", start.toISOString().slice(0, 10));
     query.set("end", new Date().toISOString().slice(0, 10));
@@ -63,6 +72,14 @@ export const dashboardApi = {
   changes: (org: string, f: Filters) => request<Changes>(`/orgs/${org}/dashboard/changes?${scope(f)}`),
   rare: (org: string, f: Filters) => request<RecordItem[]>(`/orgs/${org}/dashboard/rare?${scope(f)}`),
   invasive: (org: string, f: Filters) => request<RecordItem[]>(`/orgs/${org}/dashboard/invasive?${scope(f)}`),
+  exportCsv: async (org: string, f: Filters): Promise<Blob> => {
+    const token = loadSession()?.token;
+    const res = await fetch(`/api/v1/orgs/${org}/dashboard/export.csv?${scope(f)}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error(`Export failed (${res.status})`);
+    return res.blob();
+  },
   newRecords: (org: string, f: Filters) => request<NewRecord[]>(`/orgs/${org}/dashboard/new-records?${scope(f)}`),
 
   alerts: (org: string, unreadOnly: boolean) =>

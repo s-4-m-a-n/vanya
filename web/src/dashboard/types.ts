@@ -1,6 +1,6 @@
 import type { MultiPolygon } from "geojson";
 
-import type { Geoprivacy, RarityTier, TaxonGroup } from "../types";
+import type { Geoprivacy, Habitat, RarityTier, TaxonGroup } from "../types";
 
 export interface Org {
   id: string;
@@ -91,8 +91,22 @@ export interface Filters {
   regionId: number | null;
   group: TaxonGroup | null;
   taxon: TaxonRef | null;
-  days: number | null; // null = all time
+  days: number | null; // null = all time (ignored when a custom range is set)
+  /** Custom date range (YYYY-MM-DD, inclusive); overrides `days` when either is set. */
+  from: string | null;
+  to: string | null;
+  habitats: Habitat[];
+  iucn: string[];
+  rarity: RarityTier[];
+  verification: "auto" | "expert" | null;
+  watchlist: "invasive" | "priority" | null;
+  protected: boolean | null;
 }
+
+export const EMPTY_FILTERS: Filters = {
+  regionId: null, group: null, taxon: null, days: 90, from: null, to: null,
+  habitats: [], iucn: [], rarity: [], verification: null, watchlist: null, protected: null,
+};
 
 export interface AlertItem {
   id: string;

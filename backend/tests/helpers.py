@@ -146,8 +146,7 @@ def make_verified(db, user, taxon, lat, lon, observed_at, **fields):
         photo_sha256=hashlib.sha256(uuid.uuid4().bytes).hexdigest(),
         photo_width=1,
         photo_height=1,
-        verification_method="auto",
-        **fields,
+        **{"verification_method": "auto", **fields},
     )
     apply_geoprivacy(obs, taxon)
     db.add(obs)
