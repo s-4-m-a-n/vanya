@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vanya Feature Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17201b; --muted: #5c6862; --line: #e2e1d8; --paper: #ffffff; --soft: #f5f4ee;
+    --green: #155c3c; --green-soft: #e2f0e7; --amber: #a35f00; --amber-soft: #fdf0d9;
+    --blue: #1f5fa8; --blue-soft: #e3eefb;
+  }
+  @page { size: A4; margin: 16mm 16mm 18mm; }
+  @page cover { margin: 0; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); background: var(--paper);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif; font-size: 10pt; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  h1, h2, h3 { letter-spacing: -0.01em; margin: 0; }
+  h2 { font-size: 17pt; font-weight: 800; margin-bottom: 2mm; }
+  h3 { font-size: 12pt; font-weight: 700; margin: 0 0 1.5mm; }
+  p { margin: 0 0 2.5mm; }
+  ul, ol { margin: 0 0 2.5mm; padding-left: 5mm; }
+  li { margin-bottom: 1mm; }
+  strong { font-weight: 700; }
+  code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 8.5pt; background: var(--soft); padding: 0.2mm 1.2mm; border-radius: 1.2mm; }
+
+  /* Cover */
+  .cover {
+    page: cover; height: 297mm; padding: 28mm 22mm; display: flex; flex-direction: column;
+    background: radial-gradient(120% 70% at 85% 0%, #1f7a51 0%, #155c3c 45%, #0d3f29 100%); color: #fff;
+    break-after: page;
+  }
+  .cover img { width: 34mm; height: 34mm; border-radius: 8mm; box-shadow: 0 4mm 12mm rgba(0,0,0,.25); }
+  .cover h1 { font-size: 54pt; font-weight: 800; letter-spacing: -0.03em; margin-top: 14mm; line-height: 1; }
+  .cover .kicker { font-size: 15pt; font-weight: 600; opacity: .9; margin-top: 5mm; }
+  .cover .meaning { margin-top: 10mm; font-size: 11pt; max-width: 125mm; opacity: .88; }
+  .cover .pillars { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+  .cover .pillars div { background: rgba(255,255,255,.1); border: 0.3mm solid rgba(255,255,255,.2); border-radius: 4mm; padding: 4mm; font-size: 9pt; }
+  .cover .pillars b { display: block; font-size: 11pt; margin-bottom: 1mm; color: #f5b44a; }
+  .cover .meta { margin-top: 10mm; font-size: 9pt; opacity: .75; display: flex; justify-content: space-between; }
+
+  /* Sections */
+  .chapter { break-before: page; }
+  .part {
+    break-before: page; height: 250mm; display: flex; flex-direction: column; justify-content: center;
+  }
+  .part .num { color: var(--green); font-weight: 800; font-size: 12pt; letter-spacing: .1em; text-transform: uppercase; }
+  .part h2 { font-size: 34pt; margin-top: 3mm; }
+  .part p { font-size: 12pt; color: var(--muted); max-width: 140mm; }
+  .eyebrow { color: var(--green); font-weight: 800; font-size: 8.5pt; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1mm; }
+  .lead { font-size: 11pt; color: var(--muted); margin-bottom: 5mm; }
+
+  .feature { display: grid; grid-template-columns: 62mm 1fr; gap: 8mm; align-items: start; margin: 5mm 0 7mm; break-inside: avoid; }
+  .feature.flip { grid-template-columns: 1fr 62mm; }
+  .feature.flip .shot { order: 2; }
+  .feature.pair { grid-template-columns: 56mm 56mm 1fr; gap: 6mm; }
+  .shot img { width: 100%; display: block; border-radius: 4.5mm; border: 0.3mm solid var(--line); box-shadow: 0 1.5mm 5mm rgba(20,32,26,.10); }
+  .shot.tall img { max-height: 158mm; object-fit: cover; object-position: top; }
+  .caption { font-size: 8pt; color: var(--muted); margin-top: 1.5mm; text-align: center; }
+  .wide { margin: 4mm 0 6mm; break-inside: avoid; }
+  .wide img { width: 100%; display: block; border-radius: 3mm; border: 0.3mm solid var(--line); box-shadow: 0 1.5mm 5mm rgba(20,32,26,.08); }
+
+  .callout { border-radius: 3mm; padding: 3.5mm 4.5mm; margin: 3mm 0 4mm; background: var(--green-soft); break-inside: avoid; }
+  .callout.amber { background: var(--amber-soft); }
+  .callout.blue { background: var(--blue-soft); }
+  .callout b:first-child { display: block; margin-bottom: 0.8mm; }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-left: 8mm; margin-bottom: 2mm; }
+  .steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 0.2mm; width: 5.5mm; height: 5.5mm; border-radius: 50%;
+    background: var(--green); color: #fff; font-size: 8pt; font-weight: 800; display: grid; place-items: center;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 5mm; font-size: 9pt; break-inside: avoid; }
+  th, td { text-align: left; padding: 2mm 2.5mm; border-bottom: 0.3mm solid var(--line); vertical-align: top; }
+  th { font-size: 8pt; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .chip { display: inline-block; font-size: 7.5pt; font-weight: 700; padding: 0.4mm 2mm; border-radius: 10mm; background: var(--green-soft); color: var(--green); white-space: nowrap; }
+  .chip.amber { background: var(--amber-soft); color: var(--amber); }
+  .chip.warn { background: #fff1d2; color: #8a5a00; }
+  .chip.red { background: #fbe7e5; color: #b3261e; }
+  .chip.violet { background: #ece5fb; color: #5b3aa8; }
+  .chip.blue { background: var(--blue-soft); color: var(--blue); }
+
+  .toc { list-style: none; padding: 0; margin-top: 6mm; }
+  .toc li { display: flex; gap: 3mm; padding: 1.4mm 0; border-bottom: 0.3mm solid var(--line); font-size: 10.5pt; }
+  .toc .n { color: var(--green); font-weight: 800; width: 9mm; }
+  .toc .part-row { font-weight: 800; color: var(--muted); font-size: 8.5pt; text-transform: uppercase; letter-spacing: .08em; border-bottom: none; padding-top: 3.5mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .note { font-size: 8.5pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="cover">
+  <img src="../../web/public/icon.svg" alt="">
+  <h1>Vanya</h1>
+  <div class="kicker">Feature guide · Citizen-science biodiversity monitor</div>
+  <p class="meaning"><i>Vanya</i> (वन्य) means “wild, of the forest”. Anyone can photograph wildlife, get an instant AI
+    identification and help protect it. Every verified sighting becomes trustworthy data for conservation teams.</p>
+  <div class="pillars">
+    <div><b>Spot</b>Snap birds, animals and plants, even offline.</div>
+    <div><b>Identify</b>AI suggests the species; you confirm it.</div>
+    <div><b>Verify</b>Automatic checks and experts make the record count.</div>
+    <div><b>Protect</b>Dashboards, alerts and reports for organisations.</div>
+  </div>
+  <div class="meta"><span>Version 0.1 · October 2026</span><span>Screens shown use clearly labelled demo data</span></div>
+</section>
+
+<!-- ============================== CONTENTS ============================== -->
+<section>
+  <div class="eyebrow">Contents</div>
+  <h2>What's inside</h2>
+  <ul class="toc">
+    <li class="part-row">Part 1 · The Vanya app (for observers)</li>
+    <li><span class="n">1</span>Getting started: account, consent and safety</li>
+    <li><span class="n">2</span>Capturing a sighting</li>
+    <li><span class="n">3</span>AI identification: confirming the species</li>
+    <li><span class="n">4</span>Your sightings and verification</li>
+    <li><span class="n">5</span>Rewards: XP, rarity, levels, badges and leaderboards</li>
+    <li><span class="n">6</span>Protecting wildlife locations</li>
+    <li><span class="n">7</span>Works offline, in your language, day or night</li>
+    <li class="part-row">Part 2 · Expert review (for verifiers)</li>
+    <li><span class="n">8</span>The review queue</li>
+    <li class="part-row">Part 3 · Organisation dashboard (for NGOs, parks and researchers)</li>
+    <li><span class="n">9</span>Overview and filters</li>
+    <li><span class="n">10</span>Distribution map and density grid</li>
+    <li><span class="n">11</span>Trends and changes</li>
+    <li><span class="n">12</span>Rare, invasive and new species</li>
+    <li><span class="n">13</span>Alerts</li>
+    <li><span class="n">14</span>Ask the analyst</li>
+    <li><span class="n">15</span>Reports</li>
+    <li><span class="n">16</span>Managing your organisation</li>
+    <li class="part-row">Reference</li>
+    <li><span class="n">A</span>Roles, statuses and rules at a glance</li>
+  </ul>
+  <div class="callout" style="margin-top:5mm">
+    <b>How Vanya works in one line</b>
+    Observer takes a photo → AI suggests the species → observer confirms → automatic checks decide whether it is
+    verified straight away or sent to experts → verified records earn XP and flow into organisation dashboards,
+    alerts and reports.
+  </div>
+</section>
+
+<!-- ============================== PART 1 ============================== -->
+<section class="part">
+  <div class="num">Part 1</div>
+  <h2>The Vanya app</h2>
+  <p>A phone-first web app (installable from the browser, no app store needed) for anyone who wants to
+    photograph wildlife and help conservation.</p>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 1</div>
+  <h2>Getting started</h2>
+  <p class="lead">Create an account, agree to share photo locations, and learn the safety rules.</p>
+
+  <div class="feature">
+    <div class="shot"><img src="screenshots/m01-sign-in.png" alt=""></div>
+    <div>
+      <h3>Sign in or create an account</h3>
+      <p>The welcome screen explains what Vanya does in three lines, then asks for an email and password.
+        New users tap <b>“New here? Create an account”</b> and add their name.</p>
+      <ul>
+        <li>Pick the language from the top-right menu: <b>English, हिन्दी or Español</b>. The choice is saved to the account.</li>
+        <li>Passwords are stored with Argon2 hashing; sessions use signed tokens.</li>
+        <li>Open the app on a phone and choose <b>“Add to Home Screen”</b> to install it like a native app.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="feature">
+    <div class="shot"><img src="screenshots/m02-consent.png" alt=""></div>
+    <div>
+      <h3>Location consent and wildlife safety</h3>
+      <p>Before the first photo, Vanya asks for consent to record where each photo was taken. Locations are what
+        make a sighting useful for science, so this step is required.</p>
+      <p>The same screen sets the ground rules for responsible wildlife watching:</p>
+      <ul>
+        <li>Keep your distance: zoom in instead of approaching.</li>
+        <li>Never disturb nests, dens or roosts.</li>
+        <li>Respect protected areas and private land.</li>
+      </ul>
+      <div class="callout blue"><b>Privacy promise</b>Exact locations of threatened species are never shown publicly
+        (see Chapter 6).</div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 2</div>
+  <h2>Capturing a sighting</h2>
+  <p class="lead">The Capture tab is the home screen: one big button to photograph what you have found.</p>
+
+  <div class="feature">
+    <div class="shot"><img src="screenshots/m03-capture-home.png" alt=""></div>
+    <div>
+      <h3>The Capture screen</h3>
+      <ul>
+        <li><b>Greeting and prompt:</b> “What did you spot today?”</li>
+        <li><b>Needs-your-attention banner:</b> if any sighting is waiting for you to confirm its species, an amber
+          banner says so. Tapping it opens just those sightings. The Sightings tab also shows a count badge.</li>
+        <li><b>Take photo:</b> opens the phone camera. Vanya records the time and GPS position at that moment.</li>
+        <li><b>Choose from gallery:</b> upload an earlier photo. Vanya reads the time and place saved inside the photo (EXIF),
+          or you can say <i>“I took this photo here, just now”</i>.</li>
+        <li><b>Status pill</b> (top right): <span class="chip">Online</span>, <span class="chip warn">Offline</span> or
+          <span class="chip blue">2 to upload</span>.</li>
+        <li>New users also see a short <b>“How it works”</b> card.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m04-capture-form.png" alt=""></div>
+    <div>
+      <h3>Adding details</h3>
+      <ol class="steps">
+        <li><b>Check the location.</b> The pill shows the GPS accuracy (for example “Location ±12 m”). If there is no
+          GPS fix, the photo's own location is used when available.</li>
+        <li><b>Pick a habitat</b> with one tap: Forest, Grassland, Wetland, River or lake, Coast or sea, Desert or scrub,
+          Mountain, Farmland, Town or garden or Other. Leave it on <b>Auto</b> to let Vanya decide.</li>
+        <li><b>Add notes</b> (optional), such as behaviour or numbers seen.</li>
+        <li><b>Hide my exact location publicly</b> (optional): others will only see a general area of about 20 km.</li>
+        <li><b>Save sighting.</b> Vanya uploads the photo and asks the AI to identify it, usually within seconds.</li>
+      </ol>
+      <div class="callout amber"><b>Scope of version 1</b>Birds, mammals, reptiles, amphibians and plants.
+        Insects, fish and fungi are recognised as “not covered yet” and will be added later.</div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 3</div>
+  <h2>AI identification</h2>
+  <p class="lead">Gemini looks at the photo and suggests the most likely species. The observer always makes the final pick.</p>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m06-confirm-species.png" alt=""></div>
+    <div>
+      <h3>“Is it one of these?”</h3>
+      <p>After upload, the sighting opens with up to three suggestions, each with:</p>
+      <ul>
+        <li>the common and scientific name and its <b>IUCN Red List status</b> (for example “Least concern” or
+          “Endangered”);</li>
+        <li>a <b>match bar</b> showing the AI's confidence (here 91% Common Myna);</li>
+        <li>a short explanation of the features the AI used (“yellow bare skin around the eye…”).</li>
+      </ul>
+      <p>Tap the right one to confirm it. If none fit, tap <b>“Something else? Search species”</b> and type a common
+        or scientific name.</p>
+      <h3 style="margin-top:4mm">When the AI can't help</h3>
+      <ul>
+        <li>No animal, bird or plant visible → the app says so.</li>
+        <li>Species outside version 1 scope → “Not covered yet”.</li>
+        <li>AI unavailable → pick the species yourself with search.</li>
+      </ul>
+      <div class="callout"><b>Why the observer confirms</b>Human confirmation plus AI confidence decide whether a record can be
+        verified automatically (next chapter). Disagreeing with the AI is allowed; it just sends the record to an expert.</div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 4</div>
+  <h2>Your sightings and verification</h2>
+  <p class="lead">Every sighting moves through clear statuses, so observers always know where it stands.</p>
+
+  <div class="feature">
+    <div class="shot"><img src="screenshots/m05-sightings.png" alt=""></div>
+    <div>
+      <h3>The Sightings tab</h3>
+      <ul>
+        <li>Filter by <b>All, Needs ID, In review</b> or <b>Verified</b>; each filter shows a count.</li>
+        <li>Sightings that need you are highlighted in amber with <i>“Tap to confirm the species”</i>.</li>
+        <li>Each card shows the photo, species, status, rarity and the XP earned.</li>
+        <li>Dates read naturally: “Today, 10:12 AM”, “Yesterday, 9:12 AM”.</li>
+      </ul>
+      <table>
+        <tr><th>Status</th><th>Meaning</th></tr>
+        <tr><td><span class="chip amber">Confirm species</span></td><td>Waiting for you to pick the species.</td></tr>
+        <tr><td><span class="chip warn">Checking…</span></td><td>Automatic checks are running (seconds).</td></tr>
+        <tr><td><span class="chip warn">Awaiting expert</span></td><td>An expert must review it. Rare finds need two experts.</td></tr>
+        <tr><td><span class="chip">Verified</span></td><td>Accepted: it counts for science and confirmed XP.</td></tr>
+        <tr><td><span class="chip red">Not accepted</span></td><td>Rejected, with the reason shown.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m07-verified-detail.png" alt=""></div>
+    <div>
+      <h3>Sighting details</h3>
+      <p>Opening a sighting shows the species, its IUCN status, and what happened during verification:</p>
+      <ul>
+        <li><b>Verified automatically</b>: a confident match (85% or more) for a species that is common in the area.</li>
+        <li><b>Verified by experts</b>: expert notes and corrections are shown to the observer.</li>
+        <li>The <b>XP card</b> breaks the reward down (sighting, rarity bonus, new species for you, explorer bonus).</li>
+        <li>The facts card shows when and where it was seen, and how precisely the location is shown publicly.</li>
+      </ul>
+      <h3 style="margin-top:4mm">What sends a record to experts</h3>
+      <p class="note">Low AI confidence · observer disagrees with the AI · threatened or extinct species claimed ·
+        outside its known range or uncommon locally · duplicate or near-duplicate photos · photo GPS or time doesn't
+        match · screenshots, drawings, watermarks or captive animals.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 5</div>
+  <h2>Rewards</h2>
+  <p class="lead">XP rewards finding something new or rare, not just taking lots of photos.</p>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m08-profile.png" alt=""></div>
+    <div>
+      <h3>The Me tab</h3>
+      <ul>
+        <li><b>Level and XP</b> with a progress bar to the next level, plus XP still pending verification.</li>
+        <li><b>Stats:</b> verified sightings, species, rare finds and reputation (how reliable your sightings have been).</li>
+        <li><b>Badges</b> (12): First sighting, 10/50/100 species, Birder, Wildlife watcher, Botanist, Rare find,
+          Conservation witness, Explorer, Regular and Trusted observer.</li>
+        <li><b>Leaderboards</b> for this week, this month or all time, globally or near you (100 km).</li>
+        <li><b>Settings:</b> language, show or hide me on leaderboards, link to the organisation dashboard (for
+          members) and sign out.</li>
+      </ul>
+      <table>
+        <tr><th>Award</th><th>XP</th></tr>
+        <tr><td>Each verified sighting</td><td>10</td></tr>
+        <tr><td>New species for you</td><td>+20</td></tr>
+        <tr><td>Explorer bonus (under-recorded area)</td><td>+15</td></tr>
+        <tr><td>Rarity bonus (by local rarity)</td><td>up to +100, max 200 a day</td></tr>
+        <tr><td>Repeat of the same species within 1 km and 24 h</td><td>2</td></tr>
+        <tr><td>Restricted areas</td><td>0 (record still counts)</td></tr>
+      </table>
+      <p class="note">XP is <i>provisional</i> while a sighting is in review and becomes <i>confirmed</i> once verified.
+        Levels: Seedling, Sprout, Wanderer, Tracker, Naturalist, Field expert, Ranger, Guardian, Sentinel, Legend.</p>
+    </div>
+  </div>
+
+  <h3>Rarity tiers</h3>
+  <p>Rarity is calculated for a ~55 km area from GBIF records and Vanya's own verified data, combining how often the
+    species is recorded locally, how widespread it is, and its conservation status.</p>
+  <table>
+    <tr><th>Tier</th><th>Score</th><th>Typical example</th></tr>
+    <tr><td><span class="chip">Common here</span></td><td>below 0.2</td><td>House sparrow in a city</td></tr>
+    <tr><td><span class="chip">Uncommon here</span></td><td>0.2 – 0.4</td><td>A species seen occasionally</td></tr>
+    <tr><td><span class="chip violet">Rare here</span></td><td>0.4 – 0.6</td><td>Few local records</td></tr>
+    <tr><td><span class="chip violet">Very rare here</span></td><td>0.6 – 0.8</td><td>House crow in London</td></tr>
+    <tr><td><span class="chip amber">Exceptional find</span></td><td>0.8 and above</td><td>Endangered species such as the tiger</td></tr>
+  </table>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 6</div>
+  <h2>Protecting wildlife locations</h2>
+  <p class="lead">Publishing the exact spot of a rare animal can help poachers. Vanya generalises locations automatically.</p>
+  <table>
+    <tr><th>Level</th><th>Who gets it</th><th>Shown publicly as</th></tr>
+    <tr><td><b>Open</b></td><td>Common species</td><td>About 100 m precision</td></tr>
+    <tr><td><b>Obscured</b></td><td>Threatened species, unknown or unchecked status, or when the observer chooses
+      “Hide my exact location”</td><td>A ~20 km grid cell</td></tr>
+    <tr><td><b>Hidden</b></td><td>Species an admin marks as highly sensitive (for example heavily poached)</td><td>Not shown publicly at all</td></tr>
+  </table>
+  <ul>
+    <li>The stricter of the observer's choice and the species' sensitivity always wins.</li>
+    <li>Leaderboards, maps, dashboards and filters only ever use the generalised point.</li>
+    <li>The <b>exact</b> location can be revealed only by verifiers (while the record is waiting for review), analysts
+      (verified records inside their organisation's regions) and platform admins, for a stated purpose (verification,
+      research, management, enforcement). Every reveal is logged, with a limit of 100 per person per day.</li>
+    <li>The observer always sees their own exact location.</li>
+  </ul>
+  <p>See the protected record in the review queue (Chapter 8) for how this looks to an expert.</p>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 7</div>
+  <h2>Offline, multilingual, day or night</h2>
+  <p class="lead">Built for field work: poor signal, different languages and bright or dark conditions.</p>
+  <div class="feature pair">
+    <div class="shot"><img src="screenshots/m13-offline-queue.png" alt=""><div class="caption">Offline: the sighting waits to upload</div></div>
+    <div class="shot"><img src="screenshots/m11-hindi.png" alt=""><div class="caption">The app in Hindi</div></div>
+    <div>
+      <h3>Works offline</h3>
+      <p>With no signal, photos are saved on the phone with their time and GPS. The top bar shows
+        <span class="chip warn">Offline</span> and the sighting appears as <i>“Waiting to upload”</i>. As soon as the
+        phone is back online, Vanya uploads it and requests the AI identification automatically. Failed uploads can be
+        retried or deleted.</p>
+      <h3 style="margin-top:4mm">Three languages</h3>
+      <p>English, Hindi and Spanish today, including species names and AI answers in the user's language.
+        More languages can be added without code changes to the screens.</p>
+    </div>
+  </div>
+  <div class="feature">
+    <div class="shot"><img src="screenshots/m12-dark-mode.png" alt=""><div class="caption">Dark mode</div></div>
+    <div>
+      <h3>Dark mode</h3>
+      <p>Vanya follows the phone's light or dark setting automatically, which helps at dawn and dusk and saves battery
+        on OLED screens.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PART 2 ============================== -->
+<section class="chapter">
+  <div class="eyebrow">Part 2 · Chapter 8</div>
+  <h2>Expert review</h2>
+  <p class="lead">Verifiers get a Review tab: a queue of sightings that automatic checks could not accept on their own.</p>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m09-review.png" alt=""></div>
+    <div>
+      <h3>Reviewing a sighting</h3>
+      <ul>
+        <li><b>Filters:</b> by group (birds, animals, plants) and by area: within 100 km of your review area, or anywhere.
+          <i>“Set area to my location”</i> saves your area.</li>
+        <li>The card shows the photo, the observer and their reputation, the time, habitat and notes.</li>
+        <li><b>Observer's identification</b> next to the <b>AI suggestions</b> with confidence bars.</li>
+        <li><b>Why it needs review:</b> the reasons, such as <span class="chip warn">Low AI confidence</span>.</li>
+      </ul>
+      <h3 style="margin-top:3mm">Decisions</h3>
+      <ul>
+        <li><b>Confirm</b> the observer's species.</li>
+        <li><b>It's a different species</b>: search and confirm the correct one. The observer sees the correction.</li>
+        <li><b>Reject</b> with a reason: captive or cultivated, wrong place or time, duplicate or not their photo,
+          unidentifiable, no organism, wildlife disturbed, inappropriate.</li>
+        <li><b>Skip</b> to the next record. An optional note goes back to the observer.</li>
+      </ul>
+      <p class="note">Rare records need two independent experts. Observer reputation, shown on the card, rises with verified sightings (+1 automatic, +2 expert, +5 rare) and falls when sightings are rejected (−3, or −10 for fraud).</p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <div class="shot tall"><img src="screenshots/m10-review-protected.png" alt=""></div>
+    <div>
+      <h3>Protected species in the queue</h3>
+      <p>For a threatened species such as the tiger, the reviewer first sees only an <b>approximate area</b> with a
+        <span class="chip blue">Protected species</span> label and a <span class="chip amber">★ Rare find</span> badge.</p>
+      <p>If the exact spot is needed to judge the record, <b>“Show exact location”</b> asks for a purpose and reveals the
+        device GPS and the photo's own GPS side by side. The reveal is written to an audit log.</p>
+      <div class="callout"><b>Photo note</b>The photo on this demo record is hidden because the demo data reuses bird pictures.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PART 3 ============================== -->
+<section class="part">
+  <div class="num">Part 3</div>
+  <h2>Organisation dashboard</h2>
+  <p>A desktop dashboard at <code>/dashboard</code> for NGOs, park authorities and researchers. It shows only
+    verified records inside the organisation's regions of interest.</p>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 9</div>
+  <h2>Overview and filters</h2>
+  <div class="wide"><img src="screenshots/d01-overview.png" alt=""></div>
+  <ul>
+    <li><b>Header:</b> organisation name, unread alert count, language and a link back to the observer app.</li>
+    <li><b>Filters</b> (one row, shared by every panel so the numbers always agree): last 30 days, 90 days, 12 months or
+      all time; one region or all; birds, animals or plants. Clicking a species in “Most recorded species” filters
+      everything to that species.</li>
+    <li><b>Headline numbers:</b> verified sightings, species, observers, rare finds, threatened and invasive records.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 10</div>
+  <h2>Distribution map and density grid</h2>
+  <div class="wide"><img src="screenshots/d02-map.png" alt=""></div>
+  <div class="grid2">
+    <div>
+      <h3>Sightings map</h3>
+      <ul>
+        <li>OpenStreetMap base with the organisation's regions outlined.</li>
+        <li>Points coloured by group: <b style="color:#2a78d6">birds</b>, <b style="color:#eb6834">animals</b>,
+          <b style="color:#1baf7a">plants</b>. A ring marks protected species, shown at their generalised position.</li>
+        <li>Click a point for the photo, species and date.</li>
+        <li>Side panels list the most recorded species and the rare and threatened records.</li>
+      </ul>
+    </div>
+    <div class="wide" style="margin:0"><img src="screenshots/d03-density.png" alt=""><div class="caption">Density grid: ~55 km cells shaded by number of sightings</div></div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 11</div>
+  <h2>Trends and changes</h2>
+  <div class="wide"><img src="screenshots/d04-trends.png" alt=""></div>
+  <ul>
+    <li><b>Sightings per month</b>: a stacked chart by group. Hover a month for the exact numbers, or switch to a table view.</li>
+    <li><b>Biggest changes vs the previous period</b>: species recorded more or less often than in the equal period before.
+      The panel reminds readers that counts reflect observer effort too, so these are leads to investigate rather than population trends.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 12</div>
+  <h2>Rare, invasive and new species</h2>
+  <div class="wide"><img src="screenshots/d05-invasive-new.png" alt=""></div>
+  <ul>
+    <li><b>Invasive species (your watchlist)</b>: every verified record of species your organisation marked as invasive.
+      Invasiveness depends on place, so each organisation keeps its own list.</li>
+    <li><b>New to your regions</b>: species recorded for the first time in your regions during the period.</li>
+    <li><b>Rare and threatened</b> (Chapter 10): records with a high rarity tier or a threatened IUCN status.</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 13</div>
+  <h2>Alerts</h2>
+  <div class="wide"><img src="screenshots/d06-alerts-analyst.png" alt=""></div>
+  <p>Vanya raises an alert as soon as a sighting is verified, typically within a minute, when it is:</p>
+  <ul>
+    <li><span class="chip red">Invasive</span>: a species on your invasive watchlist;</li>
+    <li><span class="chip amber">Priority species</span>: a species on your priority watchlist;</li>
+    <li><span class="chip blue">New record</span>: the first verified record of a species in your regions.</li>
+  </ul>
+  <p>Alerts show the region and how quickly they were raised. Team members mark them as seen; the header shows the unread count.
+    Alerts can also be pushed to your own systems with a signed <b>webhook</b> (Chapter 16).</p>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 14</div>
+  <h2>Ask the analyst</h2>
+  <div class="feature flip">
+    <div class="shot"><img src="screenshots/d07-analyst-answer.png" alt=""></div>
+    <div>
+      <p>Ask questions in plain language, for example:</p>
+      <ul>
+        <li>“Which species were recorded less often in the last 3 months than before?”</li>
+        <li>“Top 5 birds in the last 90 days”</li>
+        <li>“How many invasive species sightings this year, by month?”</li>
+      </ul>
+      <p>The analyst (Gemini) restates how it understood the question, answers with key points and caveats, and
+        <b>“Show the data”</b> reveals the exact figures behind the answer. Recent questions are kept for the team.</p>
+      <div class="callout"><b>Safe by design</b>The AI never writes database queries. It picks from a fixed set of
+        validated, parameterised queries, only sees aggregated numbers from your organisation's verified records, and is
+        instructed to answer only from that data.</div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 15</div>
+  <h2>Reports</h2>
+  <div class="feature flip">
+    <div class="shot"><img src="screenshots/d08-report.png" alt=""></div>
+    <div>
+      <p>One click writes a <b>weekly, monthly or quarterly report</b> for your regions: a summary, sections on overall
+        activity, rare and threatened species, invasive species, new records and notable changes, and practical
+        recommendations.</p>
+      <ul>
+        <li>Reports are saved and listed in the Reports panel.</li>
+        <li><b>Print or save as PDF</b> produces a clean document for funders, boards or park managers.</li>
+        <li>Reports can also be generated for every organisation on a schedule.</li>
+      </ul>
+      <p class="note">The model returns structured content that is displayed as plain text, so nothing from the AI can
+        inject formatting or code into the page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter">
+  <div class="eyebrow">Chapter 16</div>
+  <h2>Managing your organisation</h2>
+  <p class="lead">Organisation admins configure what the dashboard covers and who can see it. Analysts can view everything but not change settings.</p>
+  <h3>Regions of interest</h3>
+  <div class="wide"><img src="screenshots/d09-manage-regions.png" alt=""></div>
+  <p>Draw a region by clicking corners on the map, or upload a GeoJSON file (for example a park boundary). The area is
+    shown in km². All panels, alerts and reports are limited to these regions.</p>
+  <h3>Watchlist</h3>
+  <div class="wide"><img src="screenshots/d10-manage-watchlist.png" alt=""></div>
+  <p>Search any species and add it as <span class="chip">Invasive</span> or <span class="chip">Priority</span>. The
+    watchlist drives the invasive panel and alerts.</p>
+  <h3>Members</h3>
+  <div class="wide"><img src="screenshots/d11-manage-members.png" alt=""></div>
+  <p>Add colleagues by email as <b>Admin</b> or <b>Analyst</b>, or remove them.</p>
+  <h3>Alert settings and webhooks</h3>
+  <div class="wide"><img src="screenshots/d12-manage-alerts.png" alt=""></div>
+  <p>Choose which alert types to receive and add an optional HTTPS webhook. Each alert is POSTed as JSON and signed with
+    HMAC-SHA256 in the <code>X-Vanya-Signature</code> header. Admins can create a new signing secret and send a test alert.</p>
+</section>
+
+<!-- ============================== REFERENCE ============================== -->
+<section class="chapter">
+  <div class="eyebrow">Appendix A</div>
+  <h2>Roles, statuses and rules at a glance</h2>
+  <h3>Roles</h3>
+  <table>
+    <tr><th>Role</th><th>Can do</th></tr>
+    <tr><td><b>Observer</b></td><td>Capture sightings, confirm species, earn XP, appear on leaderboards.</td></tr>
+    <tr><td><b>Verifier</b></td><td>Everything an observer can, plus the Review tab and audited exact-location reveals for records in review.</td></tr>
+    <tr><td><b>Organisation analyst</b></td><td>View the organisation dashboard, alerts, analyst and reports; reveal exact locations inside the organisation's regions.</td></tr>
+    <tr><td><b>Organisation admin</b></td><td>Everything an analyst can, plus regions, watchlist, members and alert settings.</td></tr>
+    <tr><td><b>Platform admin</b></td><td>Manage roles, species protection levels and restricted areas; view the location-access log.</td></tr>
+  </table>
+  <h3>Key rules</h3>
+  <table>
+    <tr><th>Rule</th><th>Value</th></tr>
+    <tr><td>Automatic verification</td><td>AI confidence ≥ 85%, observer agrees, species common locally, no integrity flags</td></tr>
+    <tr><td>Expert reviews needed</td><td>1 normally; 2 for rare finds</td></tr>
+    <tr><td>Obscured location</td><td>0.2° grid cell (~20 km)</td></tr>
+    <tr><td>Exact-location reveals</td><td>Purpose required, logged, 100 per person per day</td></tr>
+    <tr><td>Daily rarity bonus cap</td><td>200 XP</td></tr>
+    <tr><td>Repeat sighting window</td><td>Same species within 1 km and 24 hours</td></tr>
+    <tr><td>Rarity area</td><td>0.5° cells (~55 km)</td></tr>
+    <tr><td>Leaderboard “near me”</td><td>100 km radius</td></tr>
+  </table>
+  <h3>Data sources and technology</h3>
+  <p class="note">Species identification and analysis: Google Gemini. Taxonomy, range and rarity baselines: GBIF.
+    Conservation status: IUCN Red List (via GBIF). Maps: OpenStreetMap and Leaflet. The platform runs on open-source
+    components locally and is designed to move to Google Cloud (Cloud Run, Cloud SQL, Cloud Storage, Pub/Sub,
+    BigQuery and Vertex AI) without changing features.</p>
+</section>
+
+</body>
+</html>

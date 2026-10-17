@@ -1,4 +1,4 @@
-import { Bell, FileText, Sparkles } from "lucide-react";
+import { Bell, FileText, Printer, Sparkles } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 
 import { ApiError } from "../api";
@@ -276,7 +276,7 @@ function ReportView({ report, onClose }: { report: Report; onClose: () => void }
       <article className="report-view">
         <div className="row center no-print">
           <span className="grow" />
-          <button onClick={print}>🖨️ {t("reportPrint")}</button>
+          <button onClick={print}><Printer size={16} aria-hidden /> {t("reportPrint")}</button>
           <button onClick={onClose}>{t("reportClose")}</button>
         </div>
         <h1>{report.content.title}</h1>

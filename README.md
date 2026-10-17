@@ -9,6 +9,7 @@ rarity. Verified records feed an organisation dashboard with maps, invasive aler
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Implementation stages and progress: [docs/STAGES.md](docs/STAGES.md)
 - Architecture and GCP migration path: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- Feature guide with screenshots: [docs/Vanya-Feature-Guide.pdf](docs/Vanya-Feature-Guide.pdf) (source: `docs/guide/`)
 
 ## Layout
 
